@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#author:luoguoling
+#author:luoguoling1
 import re,urllib2,MySQLdb
 from BeautifulSoup import BeautifulSoup
 aaa = 3000
