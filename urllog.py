@@ -1,3 +1,4 @@
+#author:luoguoling
 import urllib2
 httpHandler = urllib2.HTTPSHandler(debuglevel=1)
 httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
