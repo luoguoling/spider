@@ -1,3 +1,4 @@
+#author:luoguoling
 import urllib,string
 def get_bdtieba(bdurl,beginpage,endpage):
     """
