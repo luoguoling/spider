@@ -14,4 +14,5 @@ def callback(a,b,c):
 url = "http://www.python.org"
 urllib.urlretrieve(url,"c.html",callback)
 html = urllib.urlopen(url)
-print html.info()
+header = html.info()
+print header.getparam('charset')

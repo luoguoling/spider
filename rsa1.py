@@ -15,7 +15,7 @@ prifile.write(pri)
 prifile.close()
 
 #load公钥和私钥
-message = 'hello'
+message = 'helloiwriwrewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwiwreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeew'
 with open('public.pem') as publicfile:
     p = publicfile.read()
     pubkey = rsa.PublicKey.load_pkcs1(p)
@@ -25,10 +25,12 @@ with open('private.pem') as privatefile:
 
 #用公钥加密，在用私钥解密
 crypto = rsa.encrypt(message,pubkey)
+print type(crypto)
+print 'crypto is ',crypto
 message = rsa.decrypt(crypto,privkey)
 print message
 
 
 #sign用私钥签名，在用公钥验证签名
-signature = rsa.sign(message,privkey,'SHA-1')
-rsa.verify('hello',signature,pubkey)
+#signature = rsa.sign(message,privkey,'SHA-1')
+#rsa.verify('hello',signature,pubkey)

@@ -1,0 +1,12 @@
+import re,urllib2,string
+class htmlTool:
+    """
+    deal with labels
+    """
+    BgnCharToNoneRex = re.compile("(\t|\n| |<a.*?>|<img.*?>)")
+    EndCharToNoneRex = re.compile("<.*?>")
+    BgnPartRex = re.compile("<p.*?>")
+    CharToNewLineRex = re.compile("(<br/>|</p>|<tr>|<div>|</div>)")
+    CharToNextTabRex = re.compile("<td>")
+    replaceTab = [("<","<"),(">",">"),("&","&"),("&","\"),(" "," ")]
+
