@@ -1,0 +1,48 @@
+怎么在django中使用权限？
+一.安装xadmin
+二.在view中使用权限
+三.在template中使用权限
+
+一.安装xadmin
+可参考文档:  http://lovelace.blog.51cto.com/1028430/1585864
+http://www.the5fire.com/replace-django-admin-with-xadmin-step-by-step.html
+更多消息 可参考5fire的文章
+
+二.在view中使用xadmin
+@login_required(login_url='login')
+@permission_required('auth.abc',login_url='not')
+def addbook(request): 
+    print request.user.is_authenticated()
+    print request.user.has_perm('auth.abc')
+    print request.user.has_perm('priapp.add_book')
+    print request.user.is_anonymous()
+    print request.user.get_all_permissions()  获取权限
+#    if request.user.has_perm('auth.abc'):
+    return render_to_response('addbook.html',context_instance=RequestContext(request))
+#    else:
+#        return render_to_response('403.html',context_instance=RequestContext(request))
+
+输出的结果
+[02/Feb/2015 09:31:32] "POST /login/django.contrib.auth.views.login HTTP/1.1" 200 124
+True
+True
+True
+False
+set([u'auth.abc', u'auth.view_user', u'priapp.add_book', u'priapp.delete_book'])
+三.在模板中使用权限的值
+<html>
+<head>
+</head>
+
+<body>
+{% if perms.auth.abc %}     //注意添加perms
+    <p>you can delete book</p>
+{% else %}
+    <p>add book</p>
+{% endif %}
+</body>
+</html>
+
+
+
+
