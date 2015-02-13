@@ -1,6 +1,5 @@
 #coding:utf-8
 import threading
-import MySQLdb
 from datetime import datetime
 import time,os
 import smtplib
@@ -17,11 +16,11 @@ def disk_stat():
     free = (disk.f_bavail * disk.f_frsize)
     total =(disk.f_blocks * disk.f_frsize)
     used  = (disk.f_blocks - disk.f_bfree) * disk.f_frsize
-    print total,used
     try:
         percent = (float(used) / total) * 100
     except error:
-        print '0'
+#        get_log().info('calucate error')
+	pass
     return percent
 def get_log():
     logging.basicConfig(level=logging.DEBUG,
@@ -60,8 +59,6 @@ def send_email(content):
 #        getlog().info("send email success")
     except Exception, e:
 #        get_log().error(e)
-        print 'email fail'
-        print e
         pass
 def get_ip(ifname):
     s  = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -69,24 +66,56 @@ def get_ip(ifname):
 
 def check():
     percent = disk_stat()
+#    get_log().info(percent)
     ip = get_ip('eth0')
-    print ip
     if int(percent) > 80:
-        result = ip  + "disusage:" + percent
+        result = ip  + "   disusage: " + str(percent)
 	print result
+    elif int(percent) > 88:
+	os.popen('rm -f /data/back/*')
     else:
-        result = "disusage is lower"
+        result = "false"
     return result
 def task():
     while  True:
         result = check()
-        send_email(result)
-    time.sleep(1*60)
+	if result == "false":
+	    pass
+	else:
+            send_email(result)
+    time.sleep(300*60)
 def run_monitor():
     monitor = threading.Thread(target=task)
     monitor.start()
-if __name__ == "__main__":
+def createDaemon():
+    #脱离父进程
+    try:
+        pid = os.fork()
+        if pid > 0:
+            os._exit(0)
+    except OSError,error:
+        print "fork #1 failed: %d (%s)" % (error.errno, error.strerror)
+        os._exit(1)
+    #修改当前的工作目录
+    os.chdir('/')
+    #脱离终端
+    os.setsid()
+    #重设文件创建权限
+    os.umask(0)
+    #第二次创建进程，禁止进程重新打开终端文件
+    try:
+        pid = os.fork()
+        if pid > 0:
+            print 'Daemon PID %d' % pid
+            os._exit(0)
+    except OSError,error:
+        print "fork #1 failed: %d (%s)" % (error.errno, error.strerror)
+        os._exit(1)
     run_monitor()
+if __name__ == "__main__":
+    createDaemon()
+# if __name__ == "__main__":
+#     run_monitor()
 
 
 
